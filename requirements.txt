@@ -1,0 +1,5 @@
+gymnasium[atari]
+gymnasium[accept-rom-license]
+numpy
+tensorflow==2.15
+keras-rl2
