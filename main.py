@@ -6,7 +6,7 @@ from train import train
 
 # training
 
-env = gym.make("ALE/Tennis-v5", render_mode="human")
+env = gym.make("ALE/Tennis-v5")
 env = AtariPreprocessing(
     env, frame_skip=1
 )  # setting frame_skip to 1 because frame-skipping of 4 is present in the original env
