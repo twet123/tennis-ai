@@ -1,5 +1,5 @@
 gymnasium[atari]
+gymnasium[other]
 gymnasium[accept-rom-license]
 numpy
-tensorflow==2.15
-keras-rl2
+tensorflow
