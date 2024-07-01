@@ -1,31 +1,55 @@
 import gymnasium as gym
-import random
-from agents.keras_dqn_agent import build_model, build_agent
-from keras import optimizers
+from gymnasium.wrappers import AtariPreprocessing, FrameStack
+from config import AgentParams
+from model import create_model
+from train import train
 
-env = gym.make("ALE/Tennis-v5")
-height, width, channels = env.observation_space.shape
+# training
+
+env = gym.make("ALE/Tennis-v5", render_mode="human")
+env = AtariPreprocessing(
+    env, frame_skip=1
+)  # setting frame_skip to 1 because frame-skipping of 4 is present in the original env
+env = FrameStack(env, 4)
+env.reset(seed=AgentParams.seed)
 actions = env.action_space.n
 
-# episodes = 5
-# for episode in range(episodes):
-#     state = env.reset()
-#     done = False
-#     score = 0
+model = create_model(actions)
+target_model = create_model(actions)
 
-#     while not done:
-#         action = random.randrange(actions)
-#         n_state, reward, terminated, truncated, info = env.step(action)
-#         score += reward
-#         done = terminated or truncated
+train(env, actions, model, target_model)
+model.save("tennis-model.keras")
 
-#     print(f"Episode: {episode}, Score: {score}")
+# env.close()
 
-model = build_model(height, width, channels, actions)
-model.summary()
+# playing
 
-dqn = build_agent(model, actions)
-dqn.compile(optimizers.Adam(learning_rate=1e-4))
-dqn.fit(env, nb_steps=10000, visualize=False, verbose=2)
+# import numpy as np
+# import keras
 
-env.close()
+# keras.config.enable_unsafe_deserialization()
+
+# env = gym.make("ALE/Tennis-v5", render_mode="human")
+# env = AtariPreprocessing(
+#     env, frame_skip=1
+# )  # setting frame_skip to 1 because frame-skipping of 4 is present in the original env
+# env = FrameStack(env, 4)
+# actions = env.action_space.n
+# n_state, _ = env.reset(seed=AgentParams.seed)
+
+# loaded_model = keras.saving.load_model("tennis-model.keras")
+# model = create_model(actions)
+# model.set_weights(loaded_model.get_weights())
+
+# done = False
+# score = 0
+# while not done:
+#     env.render()
+#     action = model.predict(np.expand_dims(n_state, 0))
+#     action = keras.ops.argmax(action[0]).numpy()
+#     n_state, reward, done, _, _ = env.step(action)
+#     score += reward
+
+# print(f"Game over! Score {score}")
+
+# env.close()
