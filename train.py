@@ -99,6 +99,7 @@ def train(env, actions, model, target_model):
                 target_model.set_weights(model.get_weights())
                 template = "running reward: {:.2f} at episode {}, frame count {}"
                 print(template.format(running_reward, episode_count, frame_count))
+                model.save("tennis-model.keras")
 
             if len(rewards_history) > AgentParams.max_memory_length:
                 del rewards_history[:1]
