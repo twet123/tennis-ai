@@ -2,6 +2,22 @@ import keras
 from config import AgentParams
 import numpy as np
 import tensorflow as tf
+import h5py
+import os.path
+
+
+def load_h5(file_name):
+    if os.path.isfile(f"{file_name}.h5"):
+        with h5py.File(f"{file_name}.h5", "r") as hf:
+            arr = hf[file_name][:]
+            return arr.tolist()
+
+    return []
+
+
+def save_h5(file_name, arr):
+    with h5py.File(f"{file_name}.h5", "w") as hf:
+        hf.create_dataset(file_name, data=np.asarray(arr))
 
 
 def train(env, actions, model, target_model):
@@ -9,12 +25,15 @@ def train(env, actions, model, target_model):
     loss_function = keras.losses.Huber()
 
     # replay memory
-    action_history = []
-    state_history = []
-    state_next_history = []
-    rewards_history = []
-    done_history = []
-    episode_reward_history = []
+    action_history = load_h5("action_history")
+    state_history = load_h5("state_history")
+    state_next_history = load_h5("state_next_history")
+    rewards_history = load_h5("rewards_history")
+    print(rewards_history)
+    done_history = load_h5("done_history")
+    print(done_history)
+    episode_reward_history = load_h5("episode_reward_history")
+    print(episode_reward_history)
 
     running_reward = 0
     episode_count = 0
@@ -99,7 +118,14 @@ def train(env, actions, model, target_model):
                 target_model.set_weights(model.get_weights())
                 template = "running reward: {:.2f} at episode {}, frame count {}"
                 print(template.format(running_reward, episode_count, frame_count))
+
                 model.save("tennis-model.keras")
+                save_h5("action_history", action_history)
+                save_h5("state_history", state_history)
+                save_h5("state_next_history", state_next_history)
+                save_h5("rewards_history", rewards_history)
+                save_h5("done_history", done_history)
+                save_h5("episode_reward_history", episode_reward_history)
 
             if len(rewards_history) > AgentParams.max_memory_length:
                 del rewards_history[:1]
