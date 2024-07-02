@@ -21,7 +21,9 @@ def save_h5(file_name, arr):
 
 
 def train(env, actions, model, target_model):
-    optimizer = keras.optimizers.Adam(learning_rate=0.00025, clipnorm=1.0)
+    optimizer = keras.optimizers.Adam(
+        learning_rate=AgentParams.learning_rate, clipnorm=1.0
+    )
     loss_function = keras.losses.Huber()
 
     # replay memory

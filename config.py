@@ -1,4 +1,5 @@
 class AgentParams:
+    learning_rate = 0.0001
     seed = 8
     gamma = 0.99  # Disount factor (zanemarivanje nagrade)
     epsilon = 1.0  # Epsilon greedy
