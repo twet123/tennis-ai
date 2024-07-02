@@ -3,6 +3,10 @@ from gymnasium.wrappers import AtariPreprocessing, FrameStack
 from config import AgentParams
 from model import create_model
 from train import train
+import os.path
+import keras
+
+keras.config.enable_unsafe_deserialization()
 
 # training
 
@@ -17,17 +21,19 @@ actions = env.action_space.n
 model = create_model(actions)
 target_model = create_model(actions)
 
+if os.path.isfile("tennis-model.keras"):
+    loaded_model = keras.saving.load_model("tennis-model.keras")
+    model.set_weights(loaded_model.get_weights())
+    target_model.set_weights(loaded_model.get_weights())
+
 train(env, actions, model, target_model)
 model.save("tennis-model.keras")
 
-# env.close()
+env.close()
 
 # playing
 
 # import numpy as np
-# import keras
-
-# keras.config.enable_unsafe_deserialization()
 
 # env = gym.make("ALE/Tennis-v5", render_mode="human")
 # env = AtariPreprocessing(
