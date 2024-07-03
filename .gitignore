@@ -162,3 +162,5 @@ cython_debug/
 *.h5
 *.keras
 *.pckl
+
+!/tennis-model.keras
