@@ -10,10 +10,10 @@ keras.config.enable_unsafe_deserialization()
 
 # training
 
-env = gym.make("ALE/Tennis-v5")
+env = gym.make("TennisNoFrameskip-v4")
 env = AtariPreprocessing(
-    env, frame_skip=1
-)  # setting frame_skip to 1 because frame-skipping of 4 is present in the original env
+    env, frame_skip=4
+)  # setting frame_skip to 1 because frame-skipping of 4 is present in the original env (when set to tennis v5)
 env = FrameStack(env, 4)
 env.reset(seed=AgentParams.seed)
 actions = env.action_space.n
