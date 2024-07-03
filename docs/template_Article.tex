@@ -1,0 +1,68 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+
+%opening
+\title{Deep Q-Learning Agent za igru Tennis}
+\author{Vladimir Popov SV29/2021}
+
+\begin{document}
+
+\maketitle
+
+\section{Definicija problema}
+
+Problem se odnosi na jednu od igara za \textit{Atari 2600} konzolu pod nazivom \textit{Tennis}. Naime, igra predstavlja simulaciju tenisa, gde igrač kontroliše narandžastog lika, protiv kompjuterski upravljanog plavog lika. Igra prati sva pravila tenisa i igra se jedan set od šest gemova.
+
+Igra se igra pomoću svih 18 mogućih kontrola na džojstiku za \textit{Atari 2600} (gore, dole, levo, desno, gore-desno, gore-levo, dole-desno, dole-levo, udarac, gore-udarac, dole-udarac, i ostale kombinacije...). Opis i dokumentaciju same igre moguće je pročitati na sledećem \href{https://atariage.com/manual_html_page.php?SoftwareLabelID=555}{linku}).
+
+\section{Motivacija}
+
+Usled sve veće profitabilnosti i popularnosti zabavne industrije, pogotovo njene grane koja se bavi računarskim igrama, problemi u kojima se razvija agent za neku od igara postaju sve privlačniji. Njihovim rešavanjem i ugrađivanjem takvih agenata u samu igru ona postaje teža i samim tim zabavnija za krajnjeg korisnika, koji će posledično sve više vremena provoditi za ekranom igrajući tu igru.
+
+Pored toga, \textit{Reinforcement Learning} predstavlja značajnu granu veštačke inteligencije, jer uz pomoć nje možemo da generišemo nova znanja i do sada neotkrivene pristupe za već poznate probleme, za razliku od ostalih grana koje koriste gotove, ljudski proizvedene podatke da bi simulirali nešto što čovek već zna. Samim tim svako saznanje iz ove oblasti, dobijeno ekperimentisanjem sa različitim projektima, je veoma značajno za njen dalji razvoj.
+
+\section{Skup podataka}
+
+S obzirom da se radi o \textit{Reinforcement Learning}-u skup podataka kao takav ne postoji u svom izvornom obliku. Podaci koji će se koristiti kao ulaz neuronske mreže su frejmovi same igre. Dok će se za evaluaciju akcije koristiti reakcija (nagrada ili kazna) samog okruženja.
+
+\section{Način pretprocesiranja podataka}
+
+Sami frejmovi igre biće pretvoreni od strane okruženja u crno-bele slike formata 250x160. 
+
+\section{Metodologija}
+
+Kao prvo potrebno je postaviti i instancirati okruženje. Kako bi testirali okruženje napravićemo agenta koji pravi nasumične poteze i s njim ćemo kasnije upoređivati dobijene agente. Nakon toga, potrebno je napraviti model neuronske mreže, u nekoj od biblioteka, koja će nam davati Q-vrednosti za naše akcije. Sledeći korak je treniranje prethodno postavljene mreže, upotrebom nagrade i kazne koju dobijamo od strane okruženja. Na kraju procesa učenja potrebno je agenta evaluirati i videti da li smo zadovoljni njegovim sposobnostima, na taj način dobijamo sveobuhvatnu sliku na osnovu koje možemo proceniti naše zadovoljstvo agentom i ponoviti proces treniranja uz promenu hiperparametara, ukoliko uvidimo potrebu za tim.
+
+\section{Način evaluacije}
+
+Za evaluaciju akcija koje agent sprovodi koristiće se reakcija okruženja. Pošto igra prati pravila tenisa za svaki postignut poen agent će dobiti nagardu, dok će za svaki protivnikov poen biti kažnjen. Kako bi evaluirali samog agenta, posmatraćemo njegov učinak protiv ugrađenog protivnika.
+
+\section{Tehnologije}
+
+Plan za tehnologije koje će se koristiti (skup nije striktno ograničen, i tokom razvoja može doći do njegove izmene ukoliko za to bude potrebe): 
+
+\begin{itemize}
+	\item Python - odabrani programski jezik
+	\item OpenAI Gym - okruženje za Q-učenje iz kojeg možemo da ekstrahujemo frejmove i nagrade
+	\item Arcade Learning Environment - okruženje izgrađeno na emulatoru za \textit{Atari 2600} igre, koje nam pomaže da integrišemo igru u \textit{OpenAI Gym}
+	\item TensorFlow (po potrebi Keras) - bilblioteka za mašinsko učenje
+	
+\end{itemize}
+
+\section{Literatura}
+
+\begin{itemize}
+	\item Deep Q Learning Tutorial: minDQN - Mike Wang \href{https://towardsdatascience.com/deep-q-learning-tutorial-mindqn-2a4c855abffc}{[link]}
+	\item World Models - David Ha, J\"{u}rgen Schmidhuber \href{https://arxiv.org/pdf/1803.10122}{[link]}
+	\item Cooperative multi-agent game based on reinforcement learning - Hongbo Liu \href{https://pdf.sciencedirectassets.com/779309/1-s2.0-S2667295223X00063/1-s2.0-S2667295224000084/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjELT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDZDXc5ZujfCeSPh49Esd68qM2jLVv1zuQjXgVdKnNt1gIgaeX%2BHExuymN0xv5OK9d%2B0sMdMvwA7IoNrApZgOY4dSQqsgUIHBAFGgwwNTkwMDM1NDY4NjUiDA4AkTuzkkdaGvCYlyqPBZdbZvl%2FUmEuTBpFkOlqavh5Dk%2FPy2HyE3OQLepAZpCyI%2F%2BV2nmhTt1BtOMJkDjOCld9iKzBpD4rgSqShPhAvVMVWUTbaC7MayHlIVcwz5wRyRA3pSVi9zpIjNq1mr2tjJ4Qigsspw3%2B6I4klhVIRXKjA2GufbfUP8m7h2fyyZntm7%2BXrQYc07jJkZkuOGJfwcVeO1JN%2FZ9FuEq24LG7bq%2FR2bLfI6Ti9fUmAx%2BBooHAighFSwGMudy6w%2FXyYtDN%2FtBaSy9p%2B%2F%2BVPy3M4B58hejxqp4d7QpRfrGqmzX0L1hcBLzx%2FmYCfZiZaYMQMCH2kZEVhZOWqBpS5BV%2FsaVPFY4VF2lvQTZilezfUyWRkh49uXanDwYLX9iDB%2F5LVLhUq%2FbByMbuPOo4BFDWvJRnNfbWu34ZJSgoHKmhNedaArodgru7xr5TaZ8B35KrUyAp%2FKpOE6TLE7OwgDAorraD0yDMbgCMCZahvELM%2BvV4QCPdO0P%2FAbiAwS5gMb1sPnem9%2FIgF%2FfEVEYvEFnT2q1997074NZ4OMledGNlc8i8UvEl0Sf2fUiKPYZbNoM%2B3dm00y3abSkeO%2B%2FYodh7AomvThzAFTNZ9bbVBfY5fJnVKoywE7%2B4ZmE1Vf3F2aDqmbZfMOaHw2Kfj25aIBkUJJX0VCoSLaPVl0iVUoBqeHwzezz6j4RFPkr443d3eDQ%2BVpa4dtfjiCmsYvuC3d8g0mbC37qWRcDPD57ueGejfVtn8yvNugtvd%2BlJU1GqT1c6YLAsnaGQNk84xTSu8F5o1gdKXMYbzAIIn3ieO%2Ff1T3xR6dEA%2B0vjTWqm5AzWdVto94iqInaIWefD1nUPL1Uc34SwebSg11mBLuNA3dHOjLvR4Lwww770sQY6sQHwDYcZCKZJ9yJVMuTuR6CjFkdj8WxkPU7jcEul0GaaVziB8bpCENuHvzjGKzY6OPQxlYFZTsnYajk9IY%2FiJKqYZ57b1d6GgpH7x%2FHtewIpY4iFMYWcs1%2Bcr4WCTwzhHKKz%2FZaG7yS7z%2FrSLWcVX%2FoQ5cdQ4ZsV9f02XOglsX9%2FnrqjmB1Y4nRvfr%2BcRk7JKWB8q0d2qze5aar5G7NcnYpjpdQHrvE4HD5yiy3utG6%2Bswg%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240509T200815Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYWLNNRAB7%2F20240509%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=dcd93fa58122750a1933b3a2732fb412468e188e995fd040ffac08322aa889ba&hash=6d82e36a5daee7032af9dd1cb2f688325eacdf392225b0296cda5a5d5e8ee1d9&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S2667295224000084&tid=spdf-d803b0a6-f304-4104-8244-d06a6158f851&sid=c8e2157f5b9dd941a60969c-2d0d334475bfgxrqb&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=17145a56525a54515e54&rr=88145206eb2eb30c&cc=rs}{[link]}
+	\item Hallucinogenic Deep Reinforcement Learning Using Python and Keras - David Foster \href{https://medium.com/applied-data-science/how-to-build-your-own-world-model-using-python-and-keras-64fb388ba459}{[link]}
+	\item Using Deep Reinforcement Learning to Play Sonic the Hedgehog - Daniel Bourke \href{https://mrdbourke.medium.com/the-world-model-of-a-hedgehog-6ff056a6dc7f}{[link]}
+	\item Deep Q-Network (DQN) - Shruti Dhumne \href{https://medium.com/@shruti.dhumne/deep-q-network-dqn-90e1a8799871}{[link]}
+	\item Rainbow: Combining Improvements in Deep Reinforcement Learning - 
+	DeepMind \href{https://arxiv.org/pdf/1710.02298}{[link]}
+\end{itemize}
+
+
+\end{document}
