@@ -5,6 +5,7 @@ import tensorflow as tf
 import h5py
 import os.path
 import pickle
+import gc
 
 
 def load_h5(file_name):
@@ -140,6 +141,7 @@ def train(env, actions, model, target_model):
                     model.save("tennis-model.keras")
                     with open("epsilon.pckl", "wb") as f:
                         pickle.dump(AgentParams.epsilon, f)
+                    gc.collect()
 
                 if len(rewards_history) > AgentParams.max_memory_length:
                     del rewards_history[:1]
